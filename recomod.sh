@@ -91,15 +91,15 @@ configure_binaries() {
     curl -sL https://github.com/CoolElectronics/clamide/releases/latest/download/clamide -o "${SCRIPT_DIR}/lib/clamide" 
 
     info "Downloading pv into lib/"
-    if ! [ -f lib/pv ]; then
-      curl -sL https://github.com/mosajjal/binary-tools/raw/master/x64/pv -o lib/pv
+    if ! [ -f /lib/pv ]; then
+      curl https://github.com/mosajjal/binary-tools/raw/master/x64/pv -o /lib/pv
     fi
 
   fi
 
   if fbool rw_legacy; then
     info "Downloading latest rw_legacy payloads into lib/rwl"
-    mkdir lib/rwl || :
+    mkdir /lib/rwl || :
     rwlegacy_source="$(. <(curl -Ls "$FUS_SOURCES"); echo $rwlegacy_source)"
     files="$(. <(curl -Ls "$FUS_SOURCES"); env | grep -e rwl_altfw -e seabios)"
 
@@ -107,7 +107,7 @@ configure_binaries() {
       key=${file%%=*}
       val=${file##*=}
       debug "Downloading $key: $val"
-      curl -sL "${rwlegacy_source}${val}" -o "lib/rwl/$val"
+      curl -sL "${rwlegacy_source}${val}" -o "/lib/rwl/$val"
     done <<< "$files"
   fi
   if fbool fullrom; then
@@ -204,7 +204,7 @@ patch_root_complete() {
   chmod +x "$ROOT/usr/sbin/clamide"
 
   # we don't neeeeeed pv, but it looks cool
-  cp lib/pv "$ROOT/usr/sbin/pv"
+  cp /lib/pv "$ROOT/usr/sbin/pv"
   chmod +x "$ROOT/usr/sbin/pv"
 
   cp -r "$FLAGS_kit" "$ROOT/usr/recokit"
@@ -258,7 +258,7 @@ EOF
   fi
 
   if fbool rw_legacy; then
-    tar -czvf "$ROOT/usr/recokit/rwl.tar.gz" -C "lib/rwl" .
+    tar -czvf "$ROOT/usr/recokit/rwl.tar.gz" -C "/lib/rwl" .
     >"$ROOT/usr/recokit/rw_legacy_enabled"
   fi
   if fbool fullrom; then
@@ -376,7 +376,7 @@ main() {
 
   info "Creating loopback device"
   local loopdev
-  loopdev=$(losetup -f)
+  loopdev=$(losetup -f) 
   losetup -P "$loopdev" "$bin"
   debug "Setup loopback at $loopdev"
 
