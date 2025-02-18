@@ -92,7 +92,7 @@ configure_binaries() {
 
     info "Downloading pv into lib/"
     if ! [ -f /lib/pv ]; then
-      curl https://github.com/mosajjal/binary-tools/raw/master/x64/pv -o /lib/pv
+      curl -sL https://github.com/mosajjal/binary-tools/raw/master/x64/pv -o /lib/pv
     fi
 
   fi
@@ -376,7 +376,7 @@ main() {
 
   info "Creating loopback device"
   local loopdev
-  loopdev=$(losetup -f) 
+  loopdev=$(losetup -f)
   losetup -P "$loopdev" "$bin"
   debug "Setup loopback at $loopdev"
 
